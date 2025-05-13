@@ -1,7 +1,7 @@
 ﻿#define _CRT_SECURE_NO_WARNINGS
 
-#include <iostream>
-using namespace std;
+//#include <iostream>
+//using namespace std;
 
 
 //#include <iostream>
@@ -196,21 +196,168 @@ using namespace std;
 //	return 0;
 //}
 
-// 形惨为引用，在被传值时初始化。
-void Swap(int& a, int& b)
-{
-	int tmp = a;
-	a = b;
-	b = tmp;
-}
+//// 形惨为引用，在被传值时初始化。
+//void Swap(int& a, int& b)
+//{
+//	int tmp = a;
+//	a = b;
+//	b = tmp;
+//}
+//
+//int main()
+//{
+//	int a = 1;
+//	int b = 2;
+//
+//	Swap(a, b);
+//	printf("%d %d\n", a, b);
+//
+//	return 0;
+//}
 
+
+//// 引用和常量指针
+//int main()
+//{
+//	int a = 10;
+//	
+//	int& ra = a;         // 绑定a对象
+//	int* const pa = &a;  // 指向a对象
+//	
+//	int b = 20;
+//	ra = b; // 无法更换绑定对象，这里被解析为向ra绑定的内存空间赋值。
+//	// pa = b; // 无法更换指向对象，语法报错
+//	printf("%d %d %d\n", a, b, *pa); // 输出新的值：20 20 20
+//
+//	b = 10;
+//	*pa = b; // 修改指向对象的值
+//	printf("%d %d %d\n",a, b, *pa); // 输出新值：10 10 10
+//
+//	return 0;
+//}
+
+//int main()
+//{
+//	const int a = 1;
+//
+//	// 普通引用和非指向常量的指针，绑定/指向 一个常量对象，属于权限的扩大，在C++中都不允许
+//	// int* ra = a; // 语法错误，非const修饰的常量引用，不允许绑定常量对象
+//	// int* pa1 = &a; // 语法错误，非cosnt修饰的“指向常量的指针”，不允许指向常量对象
+//	// int* const pa2 = &a; // 语法错误，非cosnt修饰的“指向常量的指针”，不允许指向常量对象
+//
+//	const int ra = a; // 正确，常量引用，绑定常量对象，后续无法更改绑定对象，也无法修改指向对象的值
+//	const int* pa1 = &a; // 正确，指向常量的指针，后续可以更换指向对象，但无法更换指向对象的值
+//	const int* const pa2 = &a; // 正确，指向常量的常量指针，后续无法更换指向对象，也无法修改指向对象的值
+//
+//	return 0;
+//}
+
+//int main()
+//{
+//	double a = 1.23;
+//	// int& b = a; // 该语句编译时会出错，显示：无法用“double"类型的值初始化“int &" 类型的引用(非常量限定)
+//	const int& b = a; // 允许
+//
+//	float c = 2.34;
+//	// int& d = c; // 错误，即使类型大小相同，也是不行的
+//	const int& d = c; // 允许
+//	return 0;
+//}
+
+
+//// 引用做返回值
+//const int& Count1()
+//{
+//	static int n = 0;
+//	n++;
+//	return n++; // 表达式返回++前n的临时无名对象
+//}
+//int& Count2()
+//{
+//	static int n = 0;
+//	n++;
+//	return ++n; // 表达式返回对象n本身
+//}
+//int main()
+//{
+//	const int& ret1 = Count1(); // 函数返回值为0的临时对象的引用，初始化表达式执行完后，该无名引用名被销毁
+//	int& ret2 = Count2(); // 函数返回返回变量n的引用，初始化表达式执行完后，该无名引用名被销毁
+//
+//	printf("%d %d\n", ret1, ret2); // 预期输出1 2，实际1 2
+//	
+//	// 思考为什么
+//	Count1();
+//	printf("%d %d\n", ret1, ret2); // 预期输出 1 2，实际3 2
+//
+//
+//	return 0;
+//}
+
+// 指针与引用底层实现一致（调试下看反汇编）
+//int main()
+//{
+//	int a = 10;
+//	// 引用
+//	int& ra = a;
+//	ra = 20;
+//	// 指针
+//	int* pa = &a;
+//	*pa = 20;
+//	return 0;
+//}
+
+
+//inline int Add(int a, int b)
+//{
+//	return a + b;
+//}
+//int main()
+//{
+//	int ret = 0;
+//	ret = Add(2, 3);
+//	return 0;
+//}
+//int a = 10;
+//int& Test1()
+//{
+//	static int a;
+//	return a;
+//}
+//int& Test2()
+//{
+//	static int a;
+//	extern int g;
+//	cout << g << endl;
+//	return a;
+//}
+//int g = 100;
+//void Test3();
+//struct Student;
+//int main()
+//{
+//	int& b = Test1();
+//	int& c = Test2();
+//	Student d = {1, 3, 5};
+//	Test3();
+//	printf("%p %p %p", &a, &b, &c);
+//	return 0;
+//}
+//
+//
+//struct Student
+//{
+//	int a;
+//	int b;
+//	int c;
+//};
+
+//根据标准，内联函数必须在每个被使用的翻译单元内可见定义
+// 内联函数允许存在多个定义，只要他们在每个翻译单元中定义是相同且唯一的
+#include "F.h"
+#include <iostream>
+using namespace std;
 int main()
 {
-	int a = 1;
-	int b = 2;
-
-	Swap(a, b);
-	printf("%d %d\n", a, b);
-
+	f(10);
 	return 0;
 }

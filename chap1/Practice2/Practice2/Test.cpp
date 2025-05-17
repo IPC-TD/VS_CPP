@@ -629,46 +629,7 @@ using namespace std;
 //	return 0;
 //}
 
-class Time
-{
-public:
-	Time(int hour = 0, int minute = 0, int second = 0)
-	{
-		cout << "Time()" << endl;
-		_hour = hour;
-		_minute = minute;
-		_second = second;
-	}
-private:
-	int _hour;
-	int _minute;
-	int _second;
-};
-class Date
-{
-public:
-	Date()
-	{
-		cout << "Date()" << endl;
-	}
-	Date() :_t1(1, 2, 3) { ; };
-private:
-	// 基本类型(内置类型)
-	int _year;
-	int _month;
-	int _day;
-	// 自定义类型
-	Time _t1;
-	Time _t2;
-	Time _t3;
-	Time _t4;
-	Time _t5;
-};
-int main()
-{
-	Date d;
-	return 0;
-}
+
 
 //class Time {
 //public:
@@ -688,3 +649,169 @@ int main()
 //    }
 //};
 //
+
+
+//class Time
+//{
+//public:
+//    Time(int hour = 1, int minute = 1, int second = 1)
+//    {
+//        _hour = hour;
+//        _minute = minute;
+//        _second = second;
+//    }
+//private:
+//    int _hour;
+//    int _minute;
+//    int _second;
+//};
+//class Date
+//{
+//public:
+//    Date()
+//        : _year(0), _month(0), _day(0), _arr{ 1, 2 },
+//        _t1(0, 0, 0), _t2(0, 0, 0), _t3(0, 0, 0), _t4(0, 0, 0), _t5(0, 0, 0),
+//        _t6{ {0, 0, 0} , {0, 0, 0} , {0, 0, 0} }
+//    {}
+//
+//private:
+//    int _year;
+//    int _month;
+//    int _day;
+//    int _arr[2];
+//    Time _t1;
+//    Time _t2;
+//    Time _t3;
+//    Time _t4;
+//    Time _t5;
+//    Time _t6[3];
+//};
+//
+//int main()
+//{
+//    Date d;
+//    return 0;
+//}
+
+//class B {
+//public:
+//    B() {
+//        static int count = 0;
+//        std::cout << "B() 构造函数被调用" << ++count << "次" << std::endl;
+//    }
+//};
+//
+//class A {
+//public:
+//    A() {
+//        std::cout << "A() 构造函数被调用" << std::endl;
+//    }
+//
+//private:
+//    B arr[3]; // B 类型的数组成员
+//    B b;
+//};
+//
+//int main()
+//{
+//    A a;
+//    return 0;
+//}
+
+
+//class Time
+//{
+//public:
+//    Time(int hour = 1, int minute = 1, int second = 1)
+//    {
+//        _hour = hour;
+//        _minute = minute;
+//        _second = second;
+//    }
+//private:
+//    int _hour;
+//    int _minute;
+//    int _second;
+//};
+//class Date
+//{
+//public:
+//    Date(): _t1(0, 0, 0){} // 为自定义类型成员，调用默认构造函数
+//private:
+//    int _year;
+//    int _month;
+//    int _day;
+//    Time _t1;
+//
+//};
+//
+//int main()
+//{
+//    Date d;
+//    return 0;
+//}
+
+
+//class Time
+//{
+//public:
+//    Time(int hour = 1, int minute = 1, int second = 1)
+//    {
+//        _hour = hour;
+//        _minute = minute;
+//        _second = second;
+//    }
+//private:
+//    int _hour;
+//    int _minute;
+//    int _second;
+//};
+//class Date
+//{
+//public:
+//    // 初始化器列表优先级，比成员指定默认值更高
+//    Date()
+//        : _year(0), _month(0), _day(0), x{3.3}
+//    {}
+//
+//    void Print()
+//    {
+//        cout << _year << endl;
+//        cout << _month << endl;
+//        cout << _day << endl;
+//    }
+//private:
+//    int _year = 1;
+//    int _month = 2;
+//    int _day = 3;
+//    int x;
+//};
+//
+//int main()
+//{
+//    Date d1;
+//    d1.Print();
+//    return 0;
+//}
+
+
+
+class Date
+{
+public:
+    // 初始化器列表优先级，比成员指定默认值更高
+    Date() :
+        _year(0), // 正常
+        _month(2.2), // 编译允许，但有警告，会丢失精度
+        _day{3.3} // ❌ 编译错误：不允许从 double 窄化为 int（C++11 起）
+    {}
+private:
+    int _year;
+    int _month;
+    int _day;
+};
+int main()
+{
+    Date d1;
+    return 0;
+}

@@ -530,8 +530,8 @@
 //	return 0;
 //}
 
-#include <iostream>
-using namespace std;
+//#include <iostream>
+//using namespace std;
 
 //class Date
 //{
@@ -796,22 +796,233 @@ using namespace std;
 
 
 
+//class Date
+//{
+//public:
+//    // 初始化器列表优先级，比成员指定默认值更高
+//    Date() :
+//        _year(0), // 正常
+//        _month(2.2), // 编译允许，但有警告，会丢失精度
+//        _day{3.3} // ❌ 编译错误：不允许从 double 窄化为 int（C++11 起）
+//    {}
+//private:
+//    int _year;
+//    int _month;
+//    int _day;
+//};
+//int main()
+//{
+//    Date d1;
+//    return 0;
+//}
+
+//class Time
+//{
+//public:
+//    Time(int hour = 1, int minute = 1, int second = 1)
+//    {
+//        _hour = hour;
+//        _minute = minute;
+//        _second = second;
+//    }
+//    void Print()
+//    {
+//        cout << _hour << ' ' 
+//            << _minute << ' ' 
+//            << _second << ' ' << endl << endl;
+//    }
+//private:
+//    int _hour;
+//    int _minute;
+//    int _second;
+//};
+//class Date
+//{
+//public:
+//    Date()
+//        : _year(0), _month(0), _day(0), _arr1{ 1, 2 }, _arr2{ {1,2,3}, {4,5,6} },
+//        _t1(1, 2, 3),
+//        _t2(0, 0, 0),
+//        // _t3(0, 0, 0), 无初始化器，采用默认初始化
+//        _t4{ {1, 2, 3} , // 隐式调用构造函数
+//        Time{4, 5, 6} , // 显式调用构造函数
+//            {0, 0, 0} , 
+//            (7, 8, 9), // 采用圆括号，里面被当成逗号表达式，值传结果值9给第一个参数
+//                       // 第五个元素无参数，采用默认初始化
+//        }              
+//    {}
+//    void Print()
+//    {
+//        _t1.Print();
+//        _t2.Print();
+//        _t3.Print();
+//        _t4[0].Print();
+//        _t4[1].Print();
+//        _t4[2].Print();
+//        _t4[3].Print();
+//        _t4[4].Print();
+//    }
+//private:
+//    int _year;
+//    int _month;
+//    int _day;
+//    int _arr1[2];
+//    int _arr2[2][3];
+//    Time _t1;
+//    Time _t2;
+//    Time _t3;
+//    Time _t4[5];
+//};
+//
+//int main()
+//{
+//    Date d;
+//    d.Print();
+//    return 0;
+//}
+
+//class Time
+//{
+//public:
+//    Time() : _hour(0), _minute(0), _second(0) {} // 默认构造函数，初始化成员为0值
+//    Time(int hour, int minute, int second) 
+//    {
+//        _hour = hour;
+//        _minute = minute;
+//        _second = second;
+//    }
+//    void Print()
+//    {
+//        cout << _hour << ' '
+//            << _minute << ' '
+//            << _second << ' ' << endl << endl;
+//    }
+//private:
+//    int _hour;
+//    int _minute;
+//    int _second;
+//};
+//class Date
+//{
+//public:
+//    // Time类中的默认构造函数已经显式初始化为0了，
+//
+//    Date() // 不给初始化器的，为默认初始化
+//        : _year(0), _month(0), _day(0), _arr{ 1, 2 },
+//        _t1(), _t2(), _t4()
+//    {}
+//    void Print()
+//    {
+//        _t1.Print();
+//        _t2.Print();
+//        _t3.Print();
+//        _t4[0].Print();
+//        _t4[1].Print();
+//        _t4[2].Print();
+//        _t4[3].Print();
+//        _t4[4].Print();
+//    }
+//private:
+//    int _year;
+//    int _month;
+//    int _day;
+//    int _arr[2];
+//    Time _t1;
+//    Time _t2;
+//    Time _t3;
+//    Time _t4[5];
+//};
+//
+//int main()
+//{
+//    Date d;
+//    d.Print();
+//    return 0;
+//}
+
+#include <iostream>
+using namespace std;
 class Date
 {
 public:
-    // 初始化器列表优先级，比成员指定默认值更高
-    Date() :
-        _year(0), // 正常
-        _month(2.2), // 编译允许，但有警告，会丢失精度
-        _day{3.3} // ❌ 编译错误：不允许从 double 窄化为 int（C++11 起）
-    {}
+	Date(int year = 0, int month = 1, int day = 1)
+	{
+		if (year < 0 || month < 0 || month > 12 || day < 0 || day > getDay(year, month))
+		{
+			cout << "无效日期，已置成默认值" << endl;
+			return;
+		}
+		_year = year;
+		_month = month;
+		_day = day;
+	}
+	~Date() {};
+	Date(const Date& d)
+	{
+		_year = d._year;
+		_month = d._month;
+		_day = d._day;
+	}
+	void Print()
+	{
+		cout << _year << '-' << _month << '-' << _day << endl;
+	}
+	bool operator==(const Date& d)
+	{
+		return this->_year == d._year &&
+			this->_month == d._month &&
+			this->_day == d._day;
+	}	
+	bool operator>(const Date& d)
+	{
+		if (this->_year > d._year)
+			return true;
+
+		else if (this->_year == d._year && this->_month > d._month)
+			return true;
+
+		else if (this->_year == _year && this->_month == _month && this->_day > d._day)
+			return true;
+
+		else
+		return false;
+	}
+	bool operator<(const Date& d)
+	{
+		return !(*this == d || *this > d);
+	}
+	// 待完善
+	void operator+(int day)
+	{
+		if (day < 0 || day > INT_MAX / 2)
+		{
+			cout << "无效天数" << endl;
+			return;
+		}
+		_day += day;
+
+	}
 private:
-    int _year;
-    int _month;
-    int _day;
+	int getDay(int year, int month)
+	{
+		static int day[13] = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+		if (month == 2 && (year % 4 == 0 && year % 100 != 0 || year % 400 == 0))
+			return 29;
+		
+		return day[month];
+	}
+	int _year;
+	int _month;
+	int _day;
 };
 int main()
 {
-    Date d1;
-    return 0;
+	Date d1(2025, 1, 1);
+	Date d2(2025, 1, 2);
+	d1.Print();
+	d2.Print();
+	cout << "d1 == d2 ? " << (d1 == d2) << endl;
+	cout << "d1 > d2 ? " << d1.operator>(d2) << endl;
+	cout << "d1 < d2 ? " << d1.operator<(d2) << endl;
+	return 0;
 }

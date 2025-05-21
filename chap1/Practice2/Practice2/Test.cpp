@@ -945,9 +945,10 @@ using namespace std;
 class Date
 {
 public:
+	// 默认构造
 	Date(int year = 0, int month = 1, int day = 1)
 	{
-		if (year < 0 || month < 0 || month > 12 || day < 0 || day > getDay(year, month))
+		if (year < 0 || month < 1 || month > 12 || day < 1 || day > getDay(year, month))
 		{
 			cout << "无效日期，已置成默认值" << endl;
 			return;
@@ -956,17 +957,21 @@ public:
 		_month = month;
 		_day = day;
 	}
+	// 析构
 	~Date() {};
+	// 拷贝构造
 	Date(const Date& d)
 	{
 		_year = d._year;
 		_month = d._month;
 		_day = d._day;
 	}
+	// 输出函数
 	void Print()
 	{
 		cout << _year << '-' << _month << '-' << _day << endl;
 	}
+	// 比较运算符重载
 	bool operator==(const Date& d)
 	{
 		return this->_year == d._year &&
@@ -991,38 +996,219 @@ public:
 	{
 		return !(*this == d || *this > d);
 	}
-	// 待完善
-	void operator+(int day)
+	bool operator>=(const Date& d)
+	{
+		return !(*this < d);
+	}
+	bool operator<=(const Date& d)
+	{
+		return !(*this > d);
+	}
+	// +运算符重载，时间+天数，不改变对象，返回结果副本
+	Date operator+(int day)
 	{
 		if (day < 0 || day > INT_MAX / 2)
 		{
 			cout << "无效天数" << endl;
 			return;
 		}
-		_day += day;
-
+		Date d = *this;
+		// 提取当年已经过的天数（不含当天）
+		day += getElapsedThisYear(d._year, d._month, d._day);
+		d._day = 1;
+		d._month = 1;
+		// 将天数加到年上
+		for (int oneYearDay = isLeapYear(d._year) ? 366 : 365; day >= oneYearDay; oneYearDay = isLeapYear(d._year) ? 366 : 365)
+		{
+			day -= oneYearDay;
+			++d._year;
+		}
+		// 将天数到月上
+		for (int maxDayInMonth = getDay(d._year, d._month); day >= maxDayInMonth; maxDayInMonth = getDay(d._year, d._month))
+		{
+			day -= maxDayInMonth;
+			d._month += 1;
+		}
+		// 剩余天数加天上
+		d._day += day;
+		return d;
+	}
+	// +=运算符重载，时间+天数，会改变对象，返回左操作数的引用
+	Date& operator+=(int day)
+	{
+		// 因为课堂上每还么没讲解赋值操作符的重载（所以先这样写）
+		Date ret = *this + day;
+		_year = ret._year;
+		_month = ret._month;
+		_day = ret._day;
+		return *this;
+	}
+	// -运算符重载，时间-天数，不改变对象，返回结果副本
+	Date operator-(int day)
+	{
+		if (day < 0 || day > INT_MAX / 2)
+		{
+			cout << "无效天数" << endl;
+			return;
+		}
+		Date d = *this;
+		// 统计借用多少年，才能完全减去day
+		int countYear = day / 366 + 1;
+		// 统计借来的年具体有多少天，初始先把当年的日子加进入
+		int tempDay = getElapsedThisYear(d._year, d._month, d._day);
+		d._month = d._day = 1;
+		while (countYear)
+		{
+			tempDay += isLeapYear(--d._year) ? 366 : 365;
+		}
+		// 用借的时间，减去要要减去的天数
+		tempDay -= day;
+		// 剩余天数，加回时间
+		d + tempDay;
+		return d;
+	}
+	// -=运算符重载，时间+天数，会改变对象，返回左操作数的引用
+	Date operator-=(int day)
+	{
+		// 因为课堂上每还么没讲解赋值操作符的重载（所以先这样写）
+		Date ret = *this - day;
+		_year = ret._year;
+		_month = ret._month;
+		_day = ret._day;
+		return *this;
+	}
+	// -运算符重载，时间-时间
+	int operator-(const Date& d)
+	{
+		if (*this < d)
+		{
+			cout << "被减时间小于另一个时间，无效" << endl;
+			return;
+		}
+		// 先获取各自当年已经过了多少天，然后差值是多少
+		int ret = getElapsedThisYear(_year, _month, _day) - getElapsedThisYear(d._year, d._month, d._day);
+		// 然后将获取被减时间的多出的年份
+		int subYear = _year - d._year;
+		// 将差值的年份换算成天数，并加到差值结果
+		int tempYear = d._year;
+		while (tempYear < _year)
+		{
+			ret += isLeapYear(tempYear) ? 366 : 365;
+			++tempYear;
+		}
+		return ret;
+	}
+	// 重载后置的++和--，返回操作前对象副本
+	Date operator++(int)
+	{
+		Date d = *this;
+		*this += 1;
+		return d;
+	}
+	Date operator--(int)
+	{
+		Date d = *this;
+		*this -= 1;
+		return d;
+	}
+	// 重载前置的++和--，返回操作后对象的引用
+	Date& operator++()
+	{
+		*this += 1;
+		return *this;
+	}
+	Date& operator--()
+	{
+		*this -= 1;
+		return *this;
 	}
 private:
+	// 检查当年是否为闰年
+	// 在C++中，定义的函数，都是隐式内联的，不写inline也可以
+	inline bool isLeapYear(int year)
+	{
+		return year % 4 == 0 && year % 100 != 0 || year % 400 == 0;
+	}
+	// 获取当月合法天数
 	int getDay(int year, int month)
 	{
 		static int day[13] = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
-		if (month == 2 && (year % 4 == 0 && year % 100 != 0 || year % 400 == 0))
+		if (month == 2 && isLeapYear(year))
 			return 29;
 		
 		return day[month];
+	}
+	// 获取当年已经过多少天
+	int getElapsedThisYear(int year, int month, int day)
+	{
+		int elapsedDay = 0;
+		for (int i = 1; i < month; ++i)
+		{
+			elapsedDay += getDay(year, i);
+		}
+		return elapsedDay + day - 1;
 	}
 	int _year;
 	int _month;
 	int _day;
 };
-int main()
+void TestDayAddDay()
 {
-	Date d1(2025, 1, 1);
-	Date d2(2025, 1, 2);
+	// 测试用例1：普通日期+1天
+	Date d1(2025, 1, 2);
+	d1 + 1;
+	d1.Print(); // 预期输出：2025-1-3
+
+	// 测试用例2：月末+1天（跨月）
+	Date d2(2025, 1, 31);
+	d2 + 1;
+	d2.Print(); // 预期输出：2025-2-1
+
+	// 测试用例3：年末+1天（跨年）
+	Date d3(2025, 12, 31);
+	d3 + 1;
+	d3.Print(); // 预期输出：2026-1-1
+
+	// 测试用例4：闰年2月最后一天+1天
+	Date d4(2024, 2, 29); // 2024年是闰年
+	d4 + 1;
+	d4.Print(); // 预期输出：2024-3-1
+
+	// 测试用例5：非闰年2月最后一天+1天
+	Date d5(2025, 2, 28); // 2025年不是闰年
+	d5 + 1;
+	d5.Print(); // 预期输出：2025-3-1
+
+	// 测试用例6：连续跨多个月
+	Date d6(2025, 4, 30);
+	d6 + 62; // 4月30日 + 62天 = 7月1日
+	d6.Print(); // 预期输出：2025-7-1
+
+	// 测试用例7：跨年+跨多个月
+	Date d7(2025, 11, 15);
+	d7 + 90; // 11月15日 + 90天 = 2026年2月13日
+	d7.Print(); // 预期输出：2026-2-13
+
+	// 测试用例8：大数值天数（接近INT_MAX/2）
+	Date d8(2025, 1, 1);
+	d8 + 1073741823; // INT_MAX/2 - 1 = 1,073,741,823
+	d8.Print(); // 实际输出2941830-4-7
+}
+void Test1()
+{
+	Date d1(2025, 1, 2);
+	Date d2(2025, 1, 1);
 	d1.Print();
 	d2.Print();
 	cout << "d1 == d2 ? " << (d1 == d2) << endl;
 	cout << "d1 > d2 ? " << d1.operator>(d2) << endl;
+	cout << "d1 >= d2 ? " << d1.operator>=(d2) << endl;
 	cout << "d1 < d2 ? " << d1.operator<(d2) << endl;
+	cout << "d1 <= d2 ? " << d1.operator<=(d2) << endl;
+}
+int main()
+{
+	// Test1();
+	TestDayAddDay();
 	return 0;
 }

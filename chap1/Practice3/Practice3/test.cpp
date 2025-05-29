@@ -383,38 +383,199 @@ using namespace std;
 //	Test2(a1);
 //}
 
-struct MyClass
-{
-	MyClass(int a, int b) : _a{ a }, _b{ b } {};
-	int operator+(int& b)
-	{
-		cout << "类内 int operator+(int& b)被调用" << endl;
-		return b + _a + _b;
-	}
-	int _a;
-	int _b;
-};
+//class Date
+//{
+//public:
+//    Date(int year = 1900, int month = 1, int day = 1)
+//    {
+//        _year = year;
+//        _month = month;
+//        _day = day;
+//    }
+//    //private:
+//    int _year;
+//    int _month;
+//    int _day;
+//};
+//
+//bool operator==(const Date& d1, const Date& d2)
+//{
+//    return d1._year == d2._year
+//        && d1._month == d2._month
+//        && d1._day == d2._day;
+//}
+//void Test()
+//{
+//    Date d1(2018, 9, 26);
+//    Date d2(2018, 9, 27);
+//    cout << (d1 == d2) << endl;   // 控制台输出0，即false
+//}
+//int main()
+//{
+//    Test();
+//    return 0;
+//}
+
+//class Date
+//{
+//public:
+//	Date(int year = 1900, int month = 1, int day = 1)
+//    {
+//        _year = year;
+//        _month = month;
+//        _day = day;
+//    }
+//
+//    // bool operator==(Date* this, const Date& d2)
+//    // 这里需要注意的是，左操作数是this，指向调用函数的对象
+//    bool operator==(const Date & d2)
+//    {
+//        return _year == d2._year && 
+//            _month == d2._month && 
+//            _day == d2._day;
+//    }
+//private:
+//    int _year;
+//    int _month;
+//    int _day;
+//};
+//
+//void Test()
+//{
+//    Date d1(2018, 9, 26);
+//    Date d2(2018, 9, 27);
+//    cout << (d1 == d2) << endl;   // 控制台输出0，即false
+//}
+//int main()
+//{
+//    Test();
+//    return 0;
+//}
+
+//// 对于下面三个operator+函数，类外的两个函数因为形参类型顺序不同，可构成重载
+//// 而类内部的函数因为与类外处于不同的作用域，因为也可以共存。
+//struct MyClass
+//{
+//	MyClass(int a, int b) : _a{ a }, _b{ b } {};
+//	int operator+(int& b)
+//	{
+//		cout << "类内 int operator+(int& b)被调用" << endl;
+//		return b + _a + _b;
+//	}
+//	int _a;
+//	int _b;
+//};
 //int operator+(int& b, MyClass& a)
 //{
 //	cout << "类外 int operator+(int& b, MyClass& a)被调用" << endl;
 //	return b + a._a +a._b;
 //}
-int operator+(MyClass& a, int& b)
-{
-	cout << "类外 int operator+(A& a, int& b)被调用" << endl;
-	return b + a._a + a._b;
+//int operator+(MyClass& a, int& b)
+//{
+//	cout << "类外 int operator+(A& a, int& b)被调用" << endl;
+//	return b + a._a + a._b;
+//}
+//
+//int main()
+//{
+//	MyClass a(1, 2);
+//	int b = 3;
+//
+//	// 对着表达式a + b，编译器可以解析为
+//	// operator+(a, b) 或者 MyClass::operate+(b)
+//	// 在本示例中，类内外部有两个可精确匹配该表达式的函数
+//	// 它们分别是类外部的：int operator+(MyClass& a, int& b)
+//	// 以及类内部的：int operator+(int& b)
+//	// 这两个函数分别处于不同的作用域，可以本身可共存（编译可过）
+//	// 但它们对下面表达式a + b 匹配程度同等（无需对表达式参数进行任何转换）
+//	// 因此表达式 a + b 存在二义性，编译不通过。
+//	// int c = a + b; // 编译报错：“operator+”不明确
+//
+//	int c = a.operator+(b);   // 正确，明确调用类内部的+运算符重载函数，其中对象a被隐含取地址作为函数第一个参数this的实参，无二义性
+//	int d = operator+(b, a);  // 正确，明确调用类外部的+运算符重载函数，无二义性
+//	cout << c << ' ' << d << endl; // 输出：6 6
+//
+//	// b作为内置类型，第一个参数不是自定义类，在不对b隐式转型的情况，无类成员函数可调用
+//	// b + a 表达式，在不隐式转型的情况下，可被解析为：operator+(b, a)
+//	// 类外部存在函数：int operator+(int& b, MyClass& a)
+//	// 因此表达式 b + a 存在唯一最佳匹配函数，编译器调用类外部函数：int operator+(int& b, MyClass& a)
+//	int e = b + a;  // 正确，存在唯一最佳匹配运算符重载函数
+//	int f = operator+(a, b);  // 正确，明确调用类外部的运算符重载函数
+//	cout << e << ' ' << f << endl; // 输出：6 6
+//	return 0;
+//}
+
+
+//struct MyClass
+//{
+//	MyClass(int a, int b) : _a{ a }, _b{ b } {};
+//	MyClass(char a) : _a{ a }, _b{ a } {};
+//	
+//
+//	//operator char()
+//	//{
+//	//	cout << "类内 operator char()被调用" << endl;
+//	//	return _a;
+//	//}
+//	int operator+(MyClass& b) 
+//	{
+//		cout << "类内 int operator+(int b)被调用" << endl;
+//		return b._a + b._b + _a + _b;
+//	}
+//	int _a;
+//	int _b;
+//};
+//
+//int main()
+//{
+//	MyClass a(1, 2);
+//	char b = 3;
+//
+//	int c = a + b; 
+//	cout << c << endl; 
+//
+//	return 0;
+//}
+
+
+//class MyInt {
+//	int value;
+//public:
+//	MyInt(int v) : value(v) {  // 转换构造函数：int → MyInt
+//		std::cout << "MyInt(int) called\n";
+//	}
+//
+//	int get() const { return value; }
+//
+//	// 加法运算符，只接受两个 MyInt
+//	MyInt operator+(const MyInt& other) const {
+//		std::cout << "operator+ called\n";
+//		return MyInt(this->value + other.value);
+//	}
+//};
+//
+//int main() {
+//	MyInt a(10);
+//	int b = 5;
+//	MyInt result = a + b;  // b 通过（转换）构造函数，从int 被转换为 MyInt(5)
+//	std::cout << "result = " << result.get() << "\n";
+//}
+
+class MyClass {
+	MyClass& operator=(const MyClass& rhs);
+};
+MyClass& MyClass::operator=(const MyClass& rhs) {
+	return *this;
 }
 int main()
 {
-	MyClass a(1, 2);
-	int b = 3;
 
-	//int c = b + a;    // += 运算符重载
-	//int d = operator+(b, a);
-	//cout << c << ' ' << d << endl;
-
-	//int e = a + b;    // += 运算符重载
-	//int f = operator+(a, b);
-	//cout << e << ' ' << f << endl;
 	return 0;
 }
+
+
+
+
+
+
+

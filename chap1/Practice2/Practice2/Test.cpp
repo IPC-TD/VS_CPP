@@ -1009,78 +1009,78 @@ public:
 	{
 		return !(*this > d);
 	}
+
+	// 重现调整实现顺序，这样operator+=不用创建临时对象，效率更高
+	// +=运算符重载，时间+=天数，会改变对象，返回左操作数的引用
+	Date& operator+=(int day)
+	{
+		if (day < 0 || day > INT_MAX / 2)
+		{
+			cout << "无效天数" << endl;
+			//cpp不允许有返回值的函数返回空，这点和C语言不同，这里不进行任何操作
+			return *this; 
+		}
+		// 提取当年已经过的天数（不含当天），累加到待加日期中
+		day += getElapsedThisYear(_year, _month, _day);
+		_day = 1;
+		_month = 1;
+		// 将天数加到年上
+		for (int oneYearDay = isLeapYear(_year) ? 366 : 365; day >= oneYearDay; oneYearDay = isLeapYear(_year) ? 366 : 365)
+		{
+			day -= oneYearDay;
+			++_year;
+		}
+		// 将天数到月上
+		for (int maxDayInMonth = getDay(_year, _month); day >= maxDayInMonth; maxDayInMonth = getDay(_year, _month))
+		{
+			day -= maxDayInMonth;
+			_month += 1;
+		}
+		// 剩余天数加天上
+		_day += day;
+		return *this;
+	}
 	// +运算符重载，时间+天数，不改变对象，返回结果副本
 	Date operator+(int day)
 	{
-		if (day < 0 || day > INT_MAX / 2)
-		{
-			cout << "无效天数" << endl;
-			return Date{-1, -1, -1}; //cpp不允许有返回值的函数返回空，这点和C语言不同，因此这里返回一个无效值
-		}
-		Date d = *this;
-		// 提取当年已经过的天数（不含当天）
-		day += getElapsedThisYear(d._year, d._month, d._day);
-		d._day = 1;
-		d._month = 1;
-		// 将天数加到年上
-		for (int oneYearDay = isLeapYear(d._year) ? 366 : 365; day >= oneYearDay; oneYearDay = isLeapYear(d._year) ? 366 : 365)
-		{
-			day -= oneYearDay;
-			++d._year;
-		}
-		// 将天数到月上
-		for (int maxDayInMonth = getDay(d._year, d._month); day >= maxDayInMonth; maxDayInMonth = getDay(d._year, d._month))
-		{
-			day -= maxDayInMonth;
-			d._month += 1;
-		}
-		// 剩余天数加天上
-		d._day += day;
-		return d;
+		// 使用拷贝构造，创建副本
+		Date ret = *this;
+		ret += day; // 将副本加上对应的天数
+		return ret; // 返回副本对象（这里临时对象，不能用引用）
 	}
-	// +=运算符重载，时间+天数，会改变对象，返回左操作数的引用
-	Date& operator+=(int day)
-	{
-		// 因为课堂上每还么没讲解赋值操作符的重载（所以先这样写）
-		Date ret = *this + day;
-		_year = ret._year;
-		_month = ret._month;
-		_day = ret._day;
-		return *this;
-	}
-	// -运算符重载，时间-天数，不改变对象，返回结果副本
-	Date operator-(int day)
+
+	// 重现调整实现顺序，这样operator-=不用创建临时对象，效率更高
+	// -=运算符重载，时间-=天数，会改变对象，返回左操作数的引用
+	Date& operator-=(int day)
 	{
 		if (day < 0 || day > INT_MAX / 2)
 		{
 			cout << "无效天数" << endl;
-			return Date{ -1, -1, -1 }; //cpp不允许有返回值的函数返回空，这点和C语言不同，因此这里返回一个无效值
+			//cpp不允许有返回值的函数返回空，这点和C语言不同，这里不进行任何操作
+			return *this;
 		}
-		Date d = *this;
 		// 统计借用多少年，才能完全减去day，并假设极端情况每次借的都是平年
 		int countYear = day / 365 + 1; // +1防止余数的天数大于，当年的已过的天数，所以多借用一年
-		// 统计借来的年具体有多少天，初始先把当年的日子加进入
-		int tempDay = getElapsedThisYear(d._year, d._month, d._day);
-		d._month = d._day = 1;
+		// 统计借来的年具体有多少天，初始先把当年的已过的日子加进入
+		int tempDay = getElapsedThisYear(_year, _month, _day);
+		_month = _day = 1;
 		while (countYear--)
 		{
-			tempDay += isLeapYear(--d._year) ? 366 : 365;
+			tempDay += isLeapYear(--_year) ? 366 : 365;
 		}
 		// 用借的时间，减去要要减去的天数
 		tempDay -= day;
 		// 剩余天数，加回时间
-		d += tempDay;
-		return d;
+		*this += tempDay;
+		return *this; 
 	}
-	// -=运算符重载，时间+天数，会改变对象，返回左操作数的引用
-	Date operator-=(int day)
+	// -运算符重载，时间-天数，不改变对象，返回结果副本
+	Date operator-(int day)
 	{
-		// 因为课堂上每还么没讲解赋值操作符的重载（所以先这样写）
-		Date ret = *this - day;
-		_year = ret._year;
-		_month = ret._month;
-		_day = ret._day;
-		return *this;
+		// 使用拷贝构造，创建副本
+		Date ret = *this;
+		ret -= day; // 将副本减去对应的天数
+		return ret; // 返回副本对象（这里临时对象，不能用引用）
 	}
 	// -运算符重载，时间-时间
 	int operator-(const Date& d)

@@ -561,21 +561,347 @@ using namespace std;
 //	std::cout << "result = " << result.get() << "\n";
 //}
 
+//class Date
+//{
+//public:
+//    Date(int year = 1900, int month = 1, int day = 1)
+//    {
+//        _year = year;
+//        _month = month;
+//        _day = day;
+//    }
+//
+//    Date(const Date& d) :
+//        _year{ d._year },
+//        _month{ d._month },
+//        _day{ d._day }
+//    {}
+//
+//    // 传入引用
+//    Date& operator=(const Date& d) 
+//    {
+//        if (this != &d) // 防自赋值
+//        {
+//            _year = d._year;
+//            _month = d._month;
+//            _day = d._day;
+//        }
+//        return *this; // 返回自身引用
+//    }
+//private:
+//    int _year;
+//    int _month;
+//    int _day;
+//};
+
+//class Date
+//{
+//public:
+//    Date(int year = 1900, int month = 1, int day = 1)
+//    {
+//        _year = year;
+//        _month = month;
+//        _day = day;
+//    }
+//
+//    Date(const Date& d) :
+//        _year{ d._year },
+//        _month{ d._month },
+//        _day{ d._day }
+//    {}
+//
+//    Date& operator=(const Date& d);
+////private:
+//    int _year;
+//    int _month;
+//    int _day;
+//};
+//
+//// 可用在类内声明，类外定义
+//Date& Date::operator=(const Date& d)
+//{
+//    if (this != &d) // 防自赋值
+//    {
+//        _year = d._year;
+//        _month = d._month;
+//        _day = d._day;
+//    }
+//    return *this; // 返回自身引用
+//}
+//
+//// 但不能定义成类作用域外的全局函数
+//Date& operator=(Date& d1, const Date& d2)
+//{
+//    if (&d1 != &d2) // 防自赋值
+//    {
+//        d1._year = d2._year;
+//        d1._month = d2._month;
+//        d1._day = d2._day;
+//    }
+//    return d1; // 返回自身引用
+//}
+
+//class Time
+//{
+//public:
+//    Time() :_hour{ 1 }, _minute{ 1 }, _second{ 1 } {}
+//
+//    Time& operator=(const Time& t)
+//    {
+//        if (this != &t)
+//        {
+//            _hour = t._hour;
+//            _minute = t._minute;
+//            _second = t._second;
+//        }
+//        return *this;
+//    }
+//private:
+//    int _hour;
+//    int _minute;
+//    int _second;
+//};
+//class Date
+//{
+//private:
+//    // 基本类型(内置类型)
+//    int _year = 1970;
+//    int _month = 1;
+//    int _day = 1;
+//    // 自定义类型
+//    Time _t;
+//};
+//int main()
+//{
+//    Date d1;
+//    Date d2;
+//    d1 = d2; // 调用编译器为Date类生成的默认赋值运算符重载函数
+//    return 0;
+//}
+
+//#include <iostream>
+//#include <assert.h>
+//using namespace std;
+//
+//class Stack
+//{
+//	int* _arr;
+//	int _size;
+//	int _capasity;
+//public:
+//	// 默认构造
+//	Stack(int size = 5) :_size{ 0 }, _capasity{ size }
+//	{
+//		_arr = (int*)malloc(sizeof(int) * _capasity);
+//		// 这里还没学“异常”机制，而且cpp不允许无返回值return空
+//		// 所以这里还是继续使用assert宏
+//		assert(_arr);
+//	}
+//	// 拷贝构造
+//	Stack(const Stack& s)
+//		: _arr{s._arr}, 
+//		_size{s._size}, 
+//		_capasity{s._capasity}
+//	{}
+//	// 析构
+//	~Stack()
+//	{
+//		free(_arr);
+//		_arr = nullptr;
+//		_size = 0;
+//		_capasity = 0;
+//	}
+//	// 赋值重载（有申请资源，赋值重载也是要实现的）
+//	// 后面学习，当前示例代码，还不会用到，
+//};
+//
+//int main()
+//{
+//	Stack s1;
+//	Stack s2 = s1; // 等效于 Stack s2(s1)
+//}
+
+
+
+//class MyClass
+//{
+//	int _a;
+//	int _b;
+//public:
+//	MyClass(int a, int b) : _a{ a }, _b{ b } {}
+//	void Print() { cout << _a << " " << _b << endl; }
+//	// 前置++
+//	MyClass& operator++()
+//	{
+//		++_a;
+//		++_b;
+//		return *this;
+//	}
+//	// 后置++
+//	MyClass operator++(int)
+//	{
+//		MyClass tmp(*this); // 调用默认拷贝构造
+//		++_a;
+//		++_b;
+//		// 函数不返回引用，是因为tmp是临时对象
+//		// 函数结束就销毁了
+//		return tmp;
+//	}
+//};
+//int main()
+//{
+//	MyClass s1(1, 2);
+//	MyClass s2 = s1++; // 调用默认拷贝构造
+//	MyClass s3 = ++s1; // 调用默认拷贝构造
+//	s2.Print();  // 输出：1 2
+//	s3.Print();  // 输出：3 4
+//	return 0;
+//}
+//class Date
+//{
+//	int _year;
+//	int _month;
+//	int _day;
+//public:
+//	Date(int year = 0, int month = 1, int day = 1)
+//		:_year(year)
+//		,_month(month)
+//		,_day(day)
+//	{}
+//};
+//class Time
+//{
+//	int _H;
+//	int _M;
+//	int _S;
+//	Date _d;
+//public:
+//	Time()
+//	{
+//		_H = 0;
+//		_M = 0;
+//		_S = 0;
+//
+//		// 进入函数体内时，_d成员就已经创建了
+//		// _d(2025, 1, 1)  // 因此这种写法是不行的
+//		// 如果想在函数体内赋值，可用这样
+//		Date d(2025, 1, 1); // 创建一个对象
+//		// 将对象赋值给成员变量
+//		_d = d; // 调用赋值运算符的重载函数（后面马上要学习的内容）
+//
+//		// 相比于直接在初始化器列表中初始化成员，在函数体内赋值的话
+//		// 额外多了一次创建对象的开销（调用构造函数）
+//		// 以及额外的一次对象赋值开销（调用默认的赋值运算符重载函数）
+//	}
+//};
+//int main()
+//{
+//	Time t;
+//	return 0;
+//}
+
+//class MyClass
+//{
+//    int _a;
+//public:
+//    MyClass() {}
+//    MyClass(int a) :_a(a) {}
+//    void Print()
+//    {
+//        cout << _a << endl;
+//    }
+//};
+//class Time
+//{
+//public:
+//    Time(int hour = 0, int minute = 0, int second = 0)
+//        : _hour(hour)
+//        ,_minute(minute)
+//        ,_second(second)
+//    {}
+//    void Print()
+//    {
+//        cout << _hour << ':' << _minute << ':' << _second << endl;
+//    }
+//private:
+//    int _hour;
+//    int _minute;
+//    int _second;
+//};
+//
+//class Date
+//{
+//public:
+//    Date() {} // 默认构造函数
+//    Date(int y, int m, int d, int h, int M, int s, int arr[2][2])
+//        :_year(y)
+//        , _month(m)
+//        , _day(d)
+//        , _t(h, M, s)
+//        , _arr{ arr[0][0], arr[0][1], arr[1][0], arr[1][1] }
+//    {}
+//    void Print()
+//    {
+//        cout << _year << '-' << _month << '-' << _day << endl;
+//        _t.Print();
+//        _m.Print();
+//        cout << "i = " << _i << endl;
+//        for (int* i = &_arr[0][0]; i <= &_arr[1][1]; ++i)
+//        {
+//            cout << *i << endl;
+//        }
+//    }
+//private:
+//    // 内置类型 
+//    int _year = 1970;
+//    int _month = 1;
+//    int _day = 1;
+//    int _arr[2][2] = { {1, 2}, {3, 4} };
+//    // 自定义类型
+//    MyClass _m{ 1 };
+//    Time _t{1, 1, 1}; 
+//    // 只读const成员
+//    const int _i = 0;
+//};
+//
+//int main()
+//{
+//    Date d1;
+//    int arr[][2] = {5, 6, 7, 8};
+//    Date d2(2025, 1, 1, 6, 6, 6, arr);
+//    d1.Print();
+//    d2.Print();
+//    return 0;
+//}
+
 class MyClass {
-	MyClass& operator=(const MyClass& rhs);
+	int _a;
+	int _b;
+public:
+	MyClass(int a = 0, int b = 0)
+		:_a(a),_b(b){}
+
+	// 打印函数
+	void Print()
+	{
+		cout << "void Print()" << endl;
+		cout << _a << ' ' << _b << endl;
+	}
+	// const版本的打印函数，const是函数签名的一部分
+	// 因此上下两个打印函数，构成重载
+	void Print() const
+	{
+		cout << "void Print() const" << endl;
+		cout << _a << ' ' << _b << endl;
+	}
 };
-MyClass& MyClass::operator=(const MyClass& rhs) {
-	return *this;
-}
 int main()
 {
+	MyClass m1;
+	const MyClass m2;
+	m1.Print();
+	m2.Print();
 
+	(const MyClass(m1)).Print();
 	return 0;
 }
-
-
-
-
-
-
-

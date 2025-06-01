@@ -874,34 +874,230 @@ using namespace std;
 //    return 0;
 //}
 
-class MyClass {
-	int _a;
-	int _b;
-public:
-	MyClass(int a = 0, int b = 0)
-		:_a(a),_b(b){}
+//class MyClass {
+//	int _a;
+//	int _b;
+//public:
+//	MyClass(int a = 0, int b = 0)
+//		:_a(a),_b(b){}
+//	MyClass(const MyClass& m)
+//		:_a(m._a), _b(m._b) {
+//		cout << "拷贝构造被调用" << endl;
+//	}
+//	// C++ 的类型转换运算符重载，
+//	// 语法：operator 要转换的目标类型(/*一般不带参数*/){/*函数体*/}
+//	// operator前不用写返回值类型，因为重载的运算符已经隐含要返回的类型了
+//	// operator 类型 这是函数名，圆括号是函数参数()，不属于类型转换运算符的部分
+//	operator const MyClass& () 
+//	{
+//		return *this;
+//	}
+//	// 打印函数
+//	void Print()
+//	{
+//		cout << "void Print()" << endl;
+//		//cout << _a << ' ' << _b << endl;
+//	}
+//	// const版本的打印函数，const是函数签名的一部分
+//	// 因此上下两个打印函数，构成重载
+//	void Print() const
+//	{
+//		cout << "void Print() const" << endl;
+//		//cout << _a << ' ' << _b << endl;
+//	}
+//};
+//int main()
+//{
+//	MyClass m1;
+//	const MyClass m2;
+//	// 根据C++标准
+//	m1.Print(); // 普通对象优先调用非const版本
+//	m2.Print(); // const对象，只能调用const版本
+//
+//	// 如果普通成员想调用const 版本的Print，可以这样操作
+//	// 使用const无名拷贝构造调用
+//	(const MyClass(m1)).Print();
+//	// 使用const 引用别名来调用
+//	const MyClass& ref = m1;
+//	ref.Print();
+//	// 使用类型转换的形式调用，类型转换时，调用上面的转换运算符重载函数
+//	((const MyClass&)m1).Print();
+//	return 0;
+//}
 
-	// 打印函数
-	void Print()
-	{
-		cout << "void Print()" << endl;
-		cout << _a << ' ' << _b << endl;
-	}
-	// const版本的打印函数，const是函数签名的一部分
-	// 因此上下两个打印函数，构成重载
-	void Print() const
-	{
-		cout << "void Print() const" << endl;
-		cout << _a << ' ' << _b << endl;
-	}
-};
-int main()
-{
-	MyClass m1;
-	const MyClass m2;
-	m1.Print();
-	m2.Print();
+//// 类中的非静态函数访问非静态函数
+//
+//class MyClass
+//{
+//	int _a;
+//	int _b;
+//public:
+//	void Init(int a, int b)
+//	{
+//		_a = a;
+//		_b = b;
+//	}
+//	void Print1()
+//	{
+//		Print2();
+//	}
+//	void Print2()
+//	{
+//		cout << _a << ' ' << _b << endl;
+//	}
+//};
+//int main()
+//{
+//	MyClass a;
+//	a.Init(1, 2);
+//	a.Print1();
+//	return 0;
+//}
 
-	(const MyClass(m1)).Print();
-	return 0;
-}
+//// 取地址操作符，和cosnt取地址操作符的重载
+//
+//class MyClass
+//{
+//	int _a;
+//	int _b;
+//public:
+//	// 如果不写，编译器默认生成的，如果显式定义，则不再生成
+//	// 编译器生成的，也是下面这样，所以一般都是不写的
+//	// 普通版本（普通对象取地址调用的）
+//	MyClass* operator&()
+//	{
+//		return this;
+//	}
+//	// cosnt版本（const对象取地址调用的）
+//	const MyClass* operator&()const
+//	{
+//		return this;
+//	}
+//	void Print()
+//	{
+//		cout << _a << ' ' << _b << endl;
+//	}
+//};
+//
+//int main()
+//{
+//	MyClass m1;
+//	void* pm = &m1;
+//
+//	*((int*)pm) = 1;
+//	*((int*)pm+1) = 2;
+//
+//	m1.Print();
+//	return 0;
+//}
+
+//class MyClass
+//{
+//	int _a;
+//	int _b;
+//public:
+//	MyClass* operator&()
+//	{
+//		return nullptr; // 不让外部获取地址
+//	}
+//	const MyClass* operator&()const
+//	{
+//		return nullptr; // 不让外部获取地址
+//	}
+//	void Print()
+//	{
+//		cout << _a << ' ' << _b << endl;
+//	}
+//};
+//int main()
+//{
+//	MyClass m1;
+//	cout << &m1 << endl;
+//	return 0;
+//}
+
+//
+//// 随便定义的类
+//class MyClass
+//{
+//    int _a;
+//public:
+//    MyClass() {}
+//    MyClass(int a) :_a(a) {}
+//    void Print()
+//    {
+//        cout << "MyClass m = " << _a << endl;
+//    }
+//};
+//// 时间类
+//class Time
+//{
+//public:
+//    Time(int hour = 0, int minute = 0, int second = 0)
+//        : _hour(hour)
+//        , _minute(minute)
+//        , _second(second)
+//    {}
+//    void Print()
+//    {
+//        cout << "时间：" << _hour << ':' << _minute << ':' << _second << endl;
+//    }
+//private:
+//    int _hour;
+//    int _minute;
+//    int _second;
+//};
+//// 日期类
+//class Date
+//{
+//public:
+//    Date() {} // 默认构造函数
+//    Date(int y, int m, int d, int h, int M, int s, int arr[2][2])
+//        :_year(y)
+//        , _month(m)
+//        , _day(d)
+//        , _t(h, M, s)
+//        , _arr{ arr[0][0], arr[0][1], arr[1][0], arr[1][1] }
+//    {}
+//
+//    // 打印函数（按成员顺序）
+//    void Print()
+//    {
+//        // 日期
+//        cout << "日期：" << _year << '-' << _month << '-' << _day << endl;
+//        // 两个自定义类数组
+//        _t.Print();
+//        _m.Print();
+//        // 内置类型数组
+//        cout << "数组内容：";
+//        for (int* i = &_arr[0][0]; i <= &_arr[1][1]; ++i)
+//        {
+//            cout << *i << ' ';
+//        }
+//        cout << endl;
+//        // const 成员
+//        cout << "i = " << _i << endl;
+//        cout << endl;
+//    }
+//private:
+//    // 内置类型 
+//    int _year = 1970;
+//    int _month = 1;
+//    int _day = 1;
+//    int _arr[2][2] = { {1, 2}, {3, 4} };
+//    // 自定义类型
+//    Time _t{ 1, 1, 1 };
+//    MyClass _m{ 1 };
+//    // 只读const成员
+//    const int _i = 0;
+//};
+//
+//int main()
+//{
+//    Date d1;
+//    int arr[][2] = { 5, 6, 7, 8 };
+//    Date d2(2025, 1, 1, 6, 6, 6, arr);
+//    d1.Print();
+//    d2.Print();
+//    return 0;
+//}

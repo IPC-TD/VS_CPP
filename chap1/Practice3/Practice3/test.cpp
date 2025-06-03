@@ -874,57 +874,6 @@ using namespace std;
 //    return 0;
 //}
 
-//class MyClass {
-//	int _a;
-//	int _b;
-//public:
-//	MyClass(int a = 0, int b = 0)
-//		:_a(a),_b(b){}
-//	MyClass(const MyClass& m)
-//		:_a(m._a), _b(m._b) {
-//		cout << "拷贝构造被调用" << endl;
-//	}
-//	// C++ 的类型转换运算符重载，
-//	// 语法：operator 要转换的目标类型(/*一般不带参数*/){/*函数体*/}
-//	// operator前不用写返回值类型，因为重载的运算符已经隐含要返回的类型了
-//	// operator 类型 这是函数名，圆括号是函数参数()，不属于类型转换运算符的部分
-//	operator const MyClass& () 
-//	{
-//		return *this;
-//	}
-//	// 打印函数
-//	void Print()
-//	{
-//		cout << "void Print()" << endl;
-//		//cout << _a << ' ' << _b << endl;
-//	}
-//	// const版本的打印函数，const是函数签名的一部分
-//	// 因此上下两个打印函数，构成重载
-//	void Print() const
-//	{
-//		cout << "void Print() const" << endl;
-//		//cout << _a << ' ' << _b << endl;
-//	}
-//};
-//int main()
-//{
-//	MyClass m1;
-//	const MyClass m2;
-//	// 根据C++标准
-//	m1.Print(); // 普通对象优先调用非const版本
-//	m2.Print(); // const对象，只能调用const版本
-//
-//	// 如果普通成员想调用const 版本的Print，可以这样操作
-//	// 使用const无名拷贝构造调用
-//	(const MyClass(m1)).Print();
-//	// 使用const 引用别名来调用
-//	const MyClass& ref = m1;
-//	ref.Print();
-//	// 使用类型转换的形式调用，类型转换时，调用上面的转换运算符重载函数
-//	((const MyClass&)m1).Print();
-//	return 0;
-//}
-
 //// 类中的非静态函数访问非静态函数
 //
 //class MyClass
@@ -1101,3 +1050,250 @@ using namespace std;
 //    d2.Print();
 //    return 0;
 //}
+
+
+//class MyClass {
+//	int _a;
+//	int _b;
+//public:
+//	//MyClass(int a = 0, int b = 0)
+//	//	:_a(a),_b(b){
+//	//	cout << "默认构造被调用" << endl;
+//	//}
+//	MyClass(int a)
+//		:_a(a), _b(a) {
+//		cout << "MyClass(int a, int b = 0)构造被调用" << endl;
+//	}
+//	MyClass(const MyClass& m)
+//		:_a(m._a), _b(m._b) {
+//		cout << "拷贝构造被调用" << endl;
+//	}
+//	operator MyClass& () 
+//	{
+//		cout << "operator const MyClass& () " << endl;
+//		return *this;
+//	}
+//
+//	operator MyClass()
+//	{
+//		cout << "operator MyClass()" << endl;
+//		return *this;
+//	}
+//	// 打印函数
+//	void Print()
+//	{
+//		cout << "void Print()" << endl;
+//		//cout << _a << ' ' << _b << endl;
+//	}
+//	// const版本的打印函数，const是函数签名的一部分
+//	// 因此上下两个打印函数，构成重载
+//	void Print() const
+//	{
+//		cout << "void Print() const" << endl;
+//		//cout << _a << ' ' << _b << endl;
+//	}
+//};
+//int main()
+//{
+//	//MyClass m1;
+//	//const MyClass m2;
+//	//// 根据C++标准
+//	//m1.Print(); // 普通对象优先调用非const版本
+//	//m2.Print(); // const对象，只能调用const版本
+//
+//	//// 如果普通成员想调用const 版本的Print，可以这样操作
+//	//// 使用const无名拷贝构造调用
+//	//(const MyClass(m1)).Print();
+//	//// 使用const 引用别名来调用
+//	//const MyClass& ref = m1;
+//	//ref.Print();
+//
+//	//((const MyClass&)m1).Print();
+//
+//	MyClass m1(1);
+//	(MyClass)m1;
+//	MyClass m2 = (MyClass)m1;
+//	m2 = (MyClass)m1;
+//
+//	return 0;
+//}
+
+//#include <iostream>
+//using namespace std;
+//class MyClass {
+//	int _a;
+//	int _b;
+//public:
+//	MyClass(int a = 0, int b = 0)
+//		:_a(a),_b(b){
+//		cout << "默认构造被调用" << endl;
+//	}
+//	MyClass(const MyClass& m)
+//		:_a(m._a), _b(m._b) {
+//		cout << "拷贝构造被调用" << endl;
+//	}
+//	operator MyClass ()
+//	{
+//		cout << "operator MyClass () " << endl;
+//		return *this;
+//	}
+//	operator const MyClass()
+//	{
+//		cout << "operator const MyClass()" << endl;
+//		return *this;
+//	}
+//	operator MyClass&()
+//	{
+//		cout << "operator MyClass&()" << endl;
+//		return *this;
+//	}
+//	operator const MyClass&()
+//	{
+//		cout << "operator const MyClass&()" << endl;
+//		return *this;
+//	}
+//	// 打印函数
+//	void Print()
+//	{
+//		cout << "void Print()" << endl;
+//		//cout << _a << ' ' << _b << endl;
+//	}
+//	// const版本的打印函数，const是函数签名的一部分
+//	// 因此上下两个打印函数，构成重载
+//	void Print() const
+//	{
+//		cout << "void Print() const" << endl;
+//		//cout << _a << ' ' << _b << endl;
+//	}
+//};
+//int main()
+//{
+//	MyClass m1(1);
+//
+//	(MyClass)m1;
+//	(const MyClass)m1;
+//
+//	(MyClass&)m1;
+//	(const MyClass&)m1;
+//	return 0;
+//}
+//
+
+//#include <iostream>
+//using namespace std;
+//
+//class MyClass {
+//    int a = 0;
+//public:
+//    MyClass() = default;
+//    MyClass(const MyClass&) = default;
+//    // 转换运算符定义
+//    operator MyClass() {
+//        cout << "operator MyClass() called" << endl;
+//        return *this;
+//    }
+//
+//    operator const MyClass() const {
+//        cout << "operator const MyClass() called" << endl;
+//        return *this;
+//    }
+//
+//    operator MyClass& () {
+//        cout << "operator MyClass&() called" << endl;
+//        return *this;
+//    }
+//
+//    operator const MyClass& () const {
+//        cout << "operator const MyClass&() called" << endl;
+//        return *this;
+//    }
+//    MyClass to_copy() const {
+//        return *this; // 明确调用拷贝构造
+//    }
+//};
+//
+//int main() {
+//    MyClass obj;
+//    const MyClass cobj;
+//
+//    // 测试转换运算符调用
+//    cout << "--- Explicit casts ---" << endl;
+//    (MyClass)obj;       // 调用拷贝构造函数（非转换运算符）
+//    (const MyClass)obj; // 调用拷贝构造函数
+//
+//    cout << "\n--- Reference casts ---" << endl;
+//    (MyClass&)obj;      // 直接绑定（无输出）
+//    (const MyClass&)cobj; // 直接绑定（无输出）
+//
+//    cout << "\n--- Explicit conversion operator call ---" << endl;
+//    obj.operator MyClass ();  // 显式调用
+//    obj.operator const MyClass ();  // 显式调用
+//    obj.operator MyClass& ();  // 显式调用
+//    obj.operator const MyClass& ();  // 显式调用
+//
+//}
+
+
+//class MyClass
+//{
+//	int _a;
+//public:
+//	MyClass() {}
+//	MyClass(const MyClass& m) :_a(m._a) {
+//		cout << "调用拷贝构造函数" << endl;
+//	}
+//	MyClass(int a) :_a(a) {
+//		cout << "调用普通构造函数" << endl;
+//	}
+//};
+//
+//int main()
+//{
+//	MyClass m1;
+//	// 创建方式1
+//	MyClass m2(m1);
+//	// 创建方式2
+//	MyClass m3 = m1;
+//
+//	cout << endl << "........分割线........." << endl << endl;
+//	// 还是这两种方式，是否依旧无区别？
+//	MyClass m4(10);
+//	const MyClass& m5 = 10;
+//
+//	const MyClass& m6(10);
+//	const MyClass& m7 = 10;
+//	return 0;
+//}
+
+class MyClass
+{
+	int _a;
+public:
+	// 这里的单参数构造函数，具有类型转换作用
+	// 允许将内置int类型，转换为MyClass类型
+	MyClass(int a) :_a(a) {
+		cout << "调用普通构造函数" << endl;
+	}
+};
+void foo(const MyClass& m)
+{
+	cout << "foo函数调用成功" << endl;
+}
+int main()
+{
+	// 调用函数时，传入参数与引用形参的类型不匹配，
+	// 引用形参要求转入一个类对象以供绑定
+	// 编译器将尝试标准转换和用户自定义转换，
+	// 在当前示例中，存在唯一最佳转换路径，即：
+	// 将字面量2通过转换构造函数MyClass(int a)
+	// 转换成MyClass类型的临时量（临时无名对象，具有只读常性）
+	// 再将该临时量，传引用的给形参绑定
+	// 形参是const 修饰的常引用，因此允许绑定这个只读临时对象
+	foo(2);
+
+	// 如果上面函数是void foo(MyClass& m)，就不行了
+	// 转后后的结果，需要存储在一个临时变量（有明确的内存空间）给引用绑定
+	// 而临时变量在C++中是常量属性的，因此无法提供给非const引用绑定
+	// 该函数调用，无可用转换路径，调用失败
+	return 0;
+}

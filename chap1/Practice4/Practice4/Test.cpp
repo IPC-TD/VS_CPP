@@ -247,35 +247,98 @@ using namespace std;
 //	return 0;
 //}
 
-class A
+//class A
+//{
+//	// 友元
+//	friend ostream& operator<<(ostream& out, A& a);
+//	friend istream& operator>>(istream& cin, A& a);
+//	int _a;
+//	int _b;
+//	int _c;
+//public:
+//	A(int a = 0, int b = 0, int c = 0)
+//	:_a(a), _b(b), _c(c){};
+//};
+//ostream& operator<<(ostream& out, A& a)
+//{
+//	cout << a._a << '/' << a._b << '/' << a._c << endl;
+//	return out;
+//}
+//istream& operator>>(istream& cin, A& a)
+//{
+//	 cin >> a._a >> a._b >> a._c;
+//	return cin;
+//}
+//int main()
+//{
+//	A a1(1, 2, 3);
+//	A a2(4, 5, 6);
+//	cout << a1 << a2 << endl;
+//	A a3;
+//	cin >> a3;
+//	cout << a3;
+//	return 0;
+//}
+
+//class MyClass
+//{
+//	int _x;
+//	int _y;
+//public:
+//	MyClass(int x = 0, int y = 0)
+//		:_x(x), _y(y)
+//	{
+//		cout << "调用默认构造" << endl;
+//	}
+//	~MyClass()
+//	{
+//		cout << "调用析构函数" << endl;
+//	}
+//
+//};
+//int main()
+//{
+//	MyClass m1[3];
+//	return 0;
+//}
+
+class MyClass
 {
-	// 友元
-	friend ostream& operator<<(ostream& out, A& a);
-	friend istream& operator>>(istream& cin, A& a);
-	int _a;
-	int _b;
-	int _c;
+	int _x;
+	int _y;
 public:
-	A(int a = 0, int b = 0, int c = 0)
-	:_a(a), _b(b), _c(c){};
+	MyClass(int x = 0, int y = 0)
+		:_x(x), _y(y)
+	{
+		cout << "调用默认构造" << endl;
+	}
+	~MyClass()
+	{
+		cout << "调用析构函数" << endl;
+	}
+
 };
-ostream& operator<<(ostream& out, A& a)
-{
-	cout << a._a << '/' << a._b << '/' << a._c << endl;
-	return out;
-}
-istream& operator>>(istream& cin, A& a)
-{
-	 cin >> a._a >> a._b >> a._c;
-	return cin;
-}
 int main()
 {
-	A a1(1, 2, 3);
-	A a2(4, 5, 6);
-	cout << a1 << a2 << endl;
-	A a3;
-	cin >> a3;
-	cout << a3;
+	MyClass m1[2] = { {1, 2}, {3, 4} }; // 在C++98/03版本，只有当元素类型为数组或者聚合类
+										// 才允许使用花括号聚合初始化，如果是C++98/03，这里是语法错误
+										// 
+										// C++11支持花括号统一初始化，则这里被认为是对元素执行列表初始化（统一初始化），
+										// 花括号内的参数就依次传递给构造函数，用于构造该数组元素
+
+	MyClass m2[2] = { (1, 2), (3, 4) }; // C++98/03版本，聚合初始化内，圆括号内多个逗号分隔的表达式
+										// 被认为是一个逗号表达式，取逗号表达式结果，即2与4，用于构造该元素
+										// 
+										// C++11支持统一初始化，但这里是的圆括号，
+										// 所以依旧认为这是聚合初始化内部的，一个逗号表达式参数
+
+	MyClass m3[2][2] = {                     // 最外层的括号，是对二维数组采用聚合初始化
+						{ {1, 2}, {3, 4} },  // 次外层的括号，是对二位数组的元素，即MyClass [2]类型的数组，进行聚合初始化
+						{{5, 6}, {7, 8} }	 // 最内层的括号，在C++98/03版本，被认为是对聚合初始化，
+						};					 // 所以会因为MyClass不是聚合类型，而导致语法错误
+											 // 
+											 // 在C++11版本起，由于不是m3数组的“标量值”不是聚合类型，
+											 // 因此一维子数组中，提供给标量值的花括号，被认为是使用统一初始化语法
+											 // 将内层花括号的表达式列表，视为传递给构造函数初始化的多个参数。
 	return 0;
 }

@@ -754,45 +754,212 @@ using namespace std;
 //	return 0;
 //}
 
+//
+//class Time
+//{
+//	// 将Date类声明为友元类
+//	friend class Date;
+//	int _hour;
+//	int _minute;
+//	int _second;
+//public:
+//	Time(int h, int m, int s)
+//		:_hour(h)
+//		, _minute(m)
+//		, _second(s)
+//	{}
+//};
+//class Date
+//{
+//	int _year;
+//	const int _month;
+//	int _day;
+//	Time _t;
+//public:
+//	Date(int Y, int m = 1, int d = 1, int H = 0, int M = 0, int S = 0)
+//		:_year(Y)
+//		,_month(m)
+//		,_day(d)
+//		,_t(H, M, S)
+//	{}
+//	// xxxx业务相关函数
+//	void foo()
+//	{
+//		_t._hour = 0; // 直接访问Time类的私有成员
+//	}
+//};
+//class A;
+//int main()
+//{
+//	Date d1(2222);
+//	Date d2(3333);
+//
+//	return 0;
+//}
 
-class Time
-{
-	// 将Date类声明为友元类
-	friend class Date;
-	int _hour;
-	int _minute;
-	int _second;
-public:
-	Time(int h, int m, int s)
-		:_hour(h)
-		, _minute(m)
-		, _second(s)
-	{}
-};
-class Date
-{
-	int _year;
-	const int _month;
-	int _day;
-	Time _t;
-public:
-	Date(int Y, int m = 1, int d = 1, int H = 0, int M = 0, int S = 0)
-		:_year(Y)
-		,_month(m)
-		,_day(d)
-		,_t(H, M, S)
-	{}
-	// xxxx业务相关函数
-	void foo()
-	{
-		_t._hour = 0; // 直接访问Time类的私有成员
-	}
-};
-class A;
+//class A
+//{
+//private:
+//	static int k;
+//	int h;
+//public:
+//	class B // B天生就是A的友元
+//	{
+//	public:
+//		void foo(const A& a)
+//		{
+//			cout << k << endl;//OK
+//			cout << a.h << endl;//OK
+//		}
+//	};
+//};
+//int A::k = 1;
+//int main()
+//{
+//	A::B b; // 必须指定在A类作用域中查找，才能找到B类
+//	b.foo(A()); // 构建临时A类对象，并输出
+//
+//	return 0;
+//}
+
+//class A{
+//public:
+//	A(int a = 0) :_a(a)
+//	{
+//		cout << "A(int a)" << endl;
+//	}
+//	~A()
+//	{
+//		cout << "~A()" << endl;
+//	}
+//private:
+//	int _a;
+//};
+//
+//class Solution {
+//public:
+//	int Sum_Solution(int n) {
+//		//...
+//		return n;
+//	}
+//};
+//int main()
+//{
+//	A aa1; // ✅ 定义一个默认初始化对象
+//	
+//	// A aa1(); // ❌ 不能这么定义对象，因为编译器会解析为是一个无参函数声明，而不是还是对象定义
+//	// 上面笔记中篇的2.2第6点，和下篇1.5的自定义类型定义部分，都已经明确强调
+//
+//	// 匿名对象
+//	// 我们可以这么定义匿名对象，匿名对象的特点不用取名字，
+//	// 但是他的生命周期只有这一行，我们可以看到下一行他就会自动调用析构函数
+//	A(); // ✅ 定义一个匿名对象
+//	A{}; // ✅ 定义一个匿名对象，使用C++11中的列表初始化语法
+//
+//	// 匿名对象可以初始化
+//	A(1); // ✅ 允许
+//	A{ 2 }; // ✅ 允许，C++11的语法
+//
+//	A aa2(2); // 定义一个新的对象，以观测在进行这行前，前面的匿名对象已经销毁
+//
+//	// 匿名对象使用场景
+//	// 匿名对象在这样场景下就很好用，当然还有一些其他使用场景，这个我们以后遇到了再说
+//	// 单纯的想调用Solution类的成员函数，但实际上我们又不想用这个对象，就构建一个临时的对象来调用
+//	Solution().Sum_Solution(10); // Solution() 这部分，就是临时对象
+//	return 0;
+//}
+
+
+//class A{
+//public:
+//	// 默认构造
+//	A(int a = 0) :_a(a)
+//	{
+//		cout << "A(int a)" << endl;
+//	}
+//	// 拷贝构造
+//	A(const A& aa):_a(aa._a)
+//	{
+//		cout << "A(const A& aa)" << endl;
+//	}
+//	// 赋值重载
+//	A& operator=(const A& aa)
+//	{
+//		cout << "A& operator=(const A& aa)" << endl;
+//		if (this != &aa)
+//		{
+//			_a = aa._a;
+//		}
+//		return *this;
+//	}
+//	// 析构
+//	~A()
+//	{
+//		cout << "~A()" << endl;
+//	}
+//private:
+//	int _a;
+//};
+//
+//void f1(A aa){}
+//
+//A f2()
+//{
+//	A aa;
+//	return aa;
+//}
+//
+//int main()
+//{
+//	// 传值传参
+//	A aa1;
+//	f1(aa1);
+//	cout << endl;
+//
+//	// 传值返回
+//	f2();
+//	cout << endl;
+//
+//	// 隐式类型，连续构造+拷贝构造->优化为直接构造
+//	f1(1);
+//	// 一个表达式中，连续构造+拷贝构造->优化为一个构造
+//	f1(A(2));
+//	cout << endl;
+//
+//	// 一个表达式中，连续拷贝构造+拷贝构造->优化一个拷贝构造
+//	A aa2 = f2();
+//	cout << endl;
+//
+//	// 一个表达式中，连续拷贝构造+赋值重载->无法优化（实际上还是有优化的，将右边的函数调用优化成直接构造）
+//	aa1 = f2();
+//	cout << endl;
+//
+//	return 0;
+//}
+
+//int main()
+//{
+//	int a = 1;
+//	double b = 2.0;
+//	// 需要%d 和%f，告知编译器以
+//	// 十进制整数格式输出整数a、默认小数点后6位的精度输出浮点数b
+//	printf("%d %f", a, b); 
+//
+//	// 告知编译器以%d 的十进制整数，和%fl 的双精度浮点数
+//	// 接受控制台的两个参数，并赋值给a和b
+//	scanf("%d %fl", a, b); 
+//	return 0;
+//}
+
 int main()
 {
-	Date d1(2222);
-	Date d2(3333);
+	int a = 1;
+	double b = 2.0;
 
+	// 自动识别提供的参数类型，以正确格式输出
+	cout << a << ' ' << b << '\n'; 
+
+	// 自动识别参数，以符合参数的格式进行写入
+	cin >> a >> b;
 	return 0;
 }

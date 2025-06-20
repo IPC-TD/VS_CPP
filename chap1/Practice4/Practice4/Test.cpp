@@ -503,29 +503,296 @@ using namespace std;
 //    return 0;
 //}
 
-class Date
-{
-public:
-    // 初始化器列表优先级，比成员指定默认值更高
-    Date() :
-        _year(0), // 正常
-        _month(2.2), // 编译允许，但有警告，会丢失精度
-        _day{ 3.3 } // ❌ 编译错误：不允许从 double 窄化为 int（C++11 起）
-    {}
-private:
-    int _year;
-    int _month;
-    int _day;
-    int x = 3.14;  // 编译允许，但有警告，会丢失精度
-    int y = { 3.14 };
-};
-int main()
-{
-    Date d1;
-    return 0;
-}
+//class Date
+//{
+//public:
+//    // 初始化器列表优先级，比成员指定默认值更高
+//    Date() :
+//        _year(0), // 正常
+//        _month(2.2), // 编译允许，但有警告，会丢失精度
+//        _day{ 3.3 } // ❌ 编译错误：不允许从 double 窄化为 int（C++11 起）
+//    {}
+//private:
+//    int _year;
+//    int _month;
+//    int _day;
+//    int x = 3.14;  // 编译允许，但有警告，会丢失精度
+//    int y = { 3.14 };
+//};
+//int main()
+//{
+//    Date d1;
+//    return 0;
+//}
 //int main()
 //{
 //	int arr[3]{ 1, 2, 3.5 };
 //	return 0;
 //}
+
+//#define SIZE 10 
+//enum { NUM1 = 1, NUM2 };
+//int main()
+//{
+//	int arr1[6];            // 字面量
+//	int arr2[1 + 2 + 3];    // 常量表达式
+//	int arr3[sizeof(int)];  // sizeof表达式
+//	int arr4[SIZE];         // 宏常量表达式
+//	int arr5[NUM1];         // 枚举常量表达式
+//	return 0;
+//}
+//struct MyStruct { int x; int y; };
+//int main()
+//{
+//	int arr[2]; // 局部作用域，自动存储期数组，无显式初始化，所有元素默认初始化为垃圾值
+//	MyStruct m1[2]; // 局部作用域，自动存储期的自定义类型数组，无显式初始化，所有元素默认初始化为垃圾值
+//
+//	return 0;
+//}
+
+
+//class MyClass
+//{
+//	int _x;
+//	int _y;
+//public:
+//	MyClass(int x = 0, int y = 0)
+//		:_x(x), _y(y)
+//	{
+//		cout << "调用默认构造" << endl;
+//	}
+//	~MyClass()
+//	{
+//		cout << "调用析构函数" << endl;
+//	}
+//};
+//void Test()
+//{
+//	MyClass arr[2] = { {1, 2}, {3, 4} };
+//}
+//void Test2()
+//{
+//	class MyClass {
+//	public:
+//		explicit MyClass(int a = 1, int b = 2, int c = 3) :_a(a), _b(b), _c(c) {}
+//		int _a;
+//		int _b;
+//		int _c;
+//	};
+//	MyClass m1((1, 2, 3), 2);
+//	MyClass arr[2];
+//	char c98[] = "cpp";
+//	for (int i = 0; i < 1; ++i)
+//	{
+//		cout << arr[i]._a << ' ' << arr[i]._b << ' ' << arr[i]._c << endl;
+//	}
+//}
+//const int a = 10;
+//int main()
+//{
+//	return 0;
+//}
+
+
+//class MyClass
+//{
+//	int _a;
+//	int _b;
+//public:
+//	MyClass(int a = 0, int b = 0)
+//		:_a(a)
+//		,_b(b)
+//	{}
+//	// 返回ostream类型的引用，以支持 cout << obj1 << obj2; 这样的连续输出表达式。
+//	// 由于传进来的常量this指针：MyClass* const this = obj; 并不用修改，就添加const
+//	// 修饰成指向常量的常量指针：const MyClass* const this = obj; 
+//	std::ostream& operator<<(std::ostream& out) const
+//	{
+//		out << _a << ' ' << _b << endl;
+//		return out;
+//	}
+//};
+//int main()
+//{
+//	MyClass m1(1, 2);
+//	MyClass m2(3, 4);
+//
+//	// cout << m1 << m2; // 这样能用？
+//	
+//	return 0;
+//}
+
+//class MyClass
+//{
+//public: 
+//	int _a;
+//	int _b;
+//public:
+//	MyClass(int a = 0, int b = 0)
+//		:_a(a)
+//		, _b(b)
+//	{}
+//};
+//// 返回ostream类型的引用，以支持 cout << obj1 << obj2; 这样的连续输出表达式。
+//std::ostream& operator<<(std::ostream& out, const MyClass& obj)
+//{
+//	// 如果上面的数据成员为private或者protected权限的呢？
+//	out << obj._a << ' ' << obj._b << endl;
+//	return out;
+//}
+//int main()
+//{
+//	MyClass m1(1, 2);
+//	MyClass m2(3, 4);
+//
+//	cout << m1 << m2; // ✅ 允许，有operator<<(ostream, MyClass)函数可用
+//
+//	return 0;
+//}
+
+
+//class MyClass
+//{
+//public:
+//	int _a;
+//	int _b;
+//public:
+//	MyClass(int a = 0, int b = 0)
+//		:_a(a)
+//		, _b(b)
+//	{}
+//};
+//// 流提取运算符重载
+//std::istream& operator>>(std::istream& const in, MyClass&obj)
+//{
+//	in >> obj._a >> obj._b;
+//	return in;
+//}
+//// 流插入运算符重载
+//std::ostream& operator<<(std::ostream& out, const MyClass& obj)
+//{
+//	out << obj._a << ' ' << obj._b << endl;
+//	return out;
+//}
+//int main()
+//{
+//	MyClass m1;
+//	MyClass m2;
+//	cin >> m1 >> m2; // 
+//	cout << m1 << m2; //
+//	return 0;
+//}
+
+//class MyClass
+//{
+//	// 声明为友元函数后，类外的这两个函数，就能访问类内的非public成员了
+//	friend istream& operator>>(istream& in, MyClass& obj);
+//	friend ostream& operator<<(ostream& out, const MyClass& obj);
+//	friend void foo();
+//// public: 
+//	int _a;
+//	int _b;
+//public:
+//	MyClass(int a = 0, int b = 0)
+//		:_a(a)
+//		, _b(b)
+//	{}
+//};
+//
+//// 流提取运算符重载
+//istream& operator>>(istream& in, MyClass& obj)
+//{
+//	in >> obj._a >> obj._b;
+//	return in;
+//}
+//// 流插入运算符重载
+//ostream& operator<<(ostream& out, const MyClass& obj)
+//{
+//	out << obj._a << ' ' << obj._b << endl;
+//	return out;
+//}
+//
+//int main()
+//{
+//	MyClass m1;
+//	MyClass m2;
+//	cin >> m1 >> m2;
+//	cout << m1 << m2;
+//	return 0;
+//}
+
+//class MyClass
+//{
+//public:
+//	int _a;
+//	int _b;
+//public:
+//	MyClass(int a = 0, int b = 0)
+//		:_a(a)
+//		, _b(b)
+//	{}
+//};
+//
+//// 流提取运算符重载
+//std::istream& operator>>(std::istream& in, MyClass& obj)
+//{
+//	in >> obj._a >> obj._b;
+//	return in;
+//}
+//// 流插入运算符重载
+//std::ostream& operator<<(std::ostream& out, const MyClass& obj)
+//{
+//	out << obj._a << ' ' << obj._b << endl;
+//	return out;
+//}
+//int main()
+//{
+//	MyClass m1;
+//	MyClass m2;
+//	cin >> m1 >> m2; // ✅ 允许，但要求相关类成员公开，破坏类封装性
+//	cout << m1 << m2; // 同理
+//	return 0;
+//}
+
+
+class Time
+{
+	// 将Date类声明为友元类
+	friend class Date;
+	int _hour;
+	int _minute;
+	int _second;
+public:
+	Time(int h, int m, int s)
+		:_hour(h)
+		, _minute(m)
+		, _second(s)
+	{}
+};
+class Date
+{
+	int _year;
+	const int _month;
+	int _day;
+	Time _t;
+public:
+	Date(int Y, int m = 1, int d = 1, int H = 0, int M = 0, int S = 0)
+		:_year(Y)
+		,_month(m)
+		,_day(d)
+		,_t(H, M, S)
+	{}
+	// xxxx业务相关函数
+	void foo()
+	{
+		_t._hour = 0; // 直接访问Time类的私有成员
+	}
+};
+class A;
+int main()
+{
+	Date d1(2222);
+	Date d2(3333);
+
+	return 0;
+}
